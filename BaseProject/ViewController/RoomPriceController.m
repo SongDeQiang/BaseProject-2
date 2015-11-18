@@ -9,6 +9,7 @@
 #import "RoomPriceController.h"
 #import "RoomPriceViewModel.h"
 #import "RoomPriceCell.h"
+#import "FangViewController.h"
 @interface RoomPriceController ()<UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
 @property (nonatomic ,strong)UICollectionView *collectionView;
 @property (nonatomic ,strong)RoomPriceViewModel *RVM;
@@ -127,6 +128,9 @@
 }
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    FangViewController *fvc=[FangViewController new];
+    fvc.path=@"http://www.baidu.com";
+    [self.navigationController pushViewController:fvc animated:YES];
     
 }
 

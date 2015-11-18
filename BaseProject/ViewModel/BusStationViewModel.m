@@ -57,16 +57,25 @@
 -(CGFloat )getXForRow:(NSInteger)row
 {
     NSString *X=[self modelForRow:row].xy;
+    if (![X isEqualToString:@""]) {
+        
+   
     NSCharacterSet *charecterset1=[NSCharacterSet characterSetWithCharactersInString:@","];
     NSArray *arr=[X componentsSeparatedByCharactersInSet:charecterset1];
     return [arr[0] doubleValue];
+    }
+    return 0;
 }
 -(CGFloat)getYForRow:(NSInteger)row
 {
     NSString *Y=[self modelForRow:row].xy;
-    NSCharacterSet *charecterset1=[NSCharacterSet characterSetWithCharactersInString:@","];
-    NSArray *arr=[Y componentsSeparatedByCharactersInSet:charecterset1];
-    return [arr[1] doubleValue];
+    if (![Y isEqualToString:@""]) {
+        NSCharacterSet *charecterset1=[NSCharacterSet characterSetWithCharactersInString:@","];
+        NSArray *arr=[Y componentsSeparatedByCharactersInSet:charecterset1];
+        return [arr[1] floatValue];
+    }
+    return 0;
+    
     
 }
 @end

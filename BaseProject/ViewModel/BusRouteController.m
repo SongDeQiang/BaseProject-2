@@ -9,16 +9,17 @@
 #import "BusRouteController.h"
 #import "BusStationViewModel.h"
 #import <MBProgressHUD.h>
+#import "BaiduController.h"
 @interface BusRouteController ()<UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate>
 @property (nonatomic ,strong)UITextField *textView1;
 @property (nonatomic ,strong)UITextField *textView2;
 @property (nonatomic ,strong)UITableView *tableView;
 @property (nonatomic ,strong)UILabel *label1;
 @property (nonatomic ,strong)UILabel *label2;
-@property (nonatomic ,strong)UIView *view1;
+@property (nonatomic ,strong)UIView*view1;
 @property (nonatomic ,strong)BusStationViewModel *BSVM;
 @property (nonatomic ,strong)UIButton *button;
-@property (nonatomic ,strong)UIActivityIndicatorView *activtyView;
+@property (nonatomic ,strong)UISegmentedControl *uisegmented;
 @end
 
 @implementation BusRouteController
@@ -37,18 +38,15 @@
     }
     return _view1;
 }
--(UIActivityIndicatorView *)activtyView
-{
-    if (!_activtyView) {
-        _activtyView=[[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-        [self.tableView addSubview:_activtyView];
-        [_activtyView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.center.mas_equalTo(self.tableView.center).mas_equalTo(0);
-        }];
-        _activtyView.backgroundColor=[UIColor greenColor];
-    }
-    return _activtyView;
-}
+//-(UISegmentedControl *)uisegmented
+//{
+//    if (!_uisegmented) {
+//        _uisegmented=[UISegmentedControl new];
+//        [self.view addSubview:_uisegmented];
+//        
+//    }
+//    return _uisegmented;
+//}
 -(UITextField*)textView1
 {
     if (!_textView1) {
@@ -134,7 +132,7 @@
         _tableView=[[UITableView alloc]initWithFrame:CGRectZero style:UITableViewStylePlain];
         [self.view addSubview:_tableView];
         _tableView.tableFooterView=[UIView new];
-        
+        _tableView.backgroundView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"1420510116_GtPhiwkW"]];
         [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.view.mas_top).mas_equalTo(100);
             make.left.right.bottom.mas_equalTo(0);
@@ -177,6 +175,10 @@
     cell.textLabel.text=[self.BSVM getLine_namesForRow:indexPath.row];
     self.isnil=[self.BSVM isNilForRow:indexPath.row];
     cell.textLabel.numberOfLines=0;
+    
+    CGFloat x=[self.BSVM getXForRow:indexPath.row];
+    CGFloat y=[self.BSVM getYForRow:indexPath.row];
+    NSLog(@"%f,%f",x,y);
     return cell;
 }
 -(UIButton *)button
@@ -201,8 +203,8 @@
                         [self showErrorMsg:error.localizedDescription];
                     }else
                     {
-                        [self.textView1 endEditing:YES];
-                        [self.textView2 endEditing:YES];
+                        [self.view endEditing:YES];
+                        
                        [self showProgress];
                         
                        [self.tableView reloadData];
@@ -226,7 +228,7 @@
     // Do any additional setup after loading the view.
     self.date=[self time];
     
-    self.view1.backgroundColor=[UIColor greenColor];
+    self.view1.backgroundColor=kRGBColor(239, 232, 211);
 //    UIImageView *imageView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:"]];
 //    [self.view1 addSubview:imageView];
 //    [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -263,11 +265,18 @@
 {
     return 70;
 }
-
--(void)textFieldDidEndEditing:(UITextField *)textField
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self.textView1 resignFirstResponder];
-    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    BaiduController *bvc=[BaiduController new];
+    bvc.X=[self.BSVM getXForRow:indexPath.row];
+    bvc.Y=[self.BSVM getYForRow:indexPath.row];
+    if (bvc.X==0&&bvc.Y==0) {
+        bvc.title=@"无法定位";
+    }
+    bvc.title1=[self.BSVM nameForRow:indexPath.row];
+    bvc.title2=[self.BSVM getLine_namesForRow:indexPath.row];
+    [self.navigationController pushViewController:bvc animated:YES];
 }
 
 /*

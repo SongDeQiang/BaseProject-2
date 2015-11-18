@@ -13,9 +13,11 @@
 #import "TabBarConttroller.h"
 #import "LeftViewController.h"
 #import "RoomPriceManager.h"
-#import "SearchViewController.h"
+
 #import "BusStationNetManager.h"
 #import "BusStationViewModel.h"
+
+#define BaiduAK @"FfClOXAzuLCGKm3NAT5kCSPn"
 @interface AppDelegate ()
 
 @end
@@ -25,13 +27,12 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     [self initializeWithApplication:application];
-//    [RoomPriceManager getWithPage:1 Cityarea:@"东城" CityName:@"北京" Date:[self time] completionHandle:^(id model, NSError *error) {
-//        NSLog(@"");
-//    }];
-//    [BusStationNetManager getStationWith:@"西直门" City:@"北京" Date:[self time] completionHandle:^(id model, NSError *error) {
-//        BusStationViewModel *mo=[BusStationViewModel new];
-//        NSLog(@"fdfsss%f",[mo getYForRow:1]);
-//    }];
+   
+    __mapManager=[[BMKMapManager alloc]init];
+    BOOL ret=[__mapManager start:BaiduAK generalDelegate:nil];
+    if (!ret) {
+        NSLog(@"manager start failed");
+    }
     self.window.rootViewController=[TabBarConttroller new];
     return YES;
 }
